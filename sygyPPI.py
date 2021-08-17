@@ -82,7 +82,7 @@ def funGC(X0,fi,ai,threshold):
 	return(output)
 
 
-def funGCpv(X0,fi,ai,repnum,threshold):
+def funGCpv(X0,fi,ai,iternum,threshold):
 	datain01 = X0[:,fi]
 	datain02 = X0[:,ai]
 	datain = datain01 + datain02
@@ -90,13 +90,13 @@ def funGCpv(X0,fi,ai,repnum,threshold):
 	output = np.sum(datain >= threshold) - np.sum(datain01 >= threshold) - np.sum(datain02 >= threshold)
 	if output >= 1:
 		count = 0
-		for n in range(repnum):
+		for n in range(iternum):
 			datain1 = np.random.shuffle(datain01)
 			datain = datain01 + datain02
 			all = np.sum(datain >= threshold)
 			if all >= threshold2:
 				count = count + 1
-		ratio = (count + 1) / (repnum+1)
+		ratio = (count + 1) / (iternum+1)
 		return(ratio)
 	else:
 		return(1)
@@ -150,7 +150,7 @@ def digitselectcols(selectcols, genename):
 
 
 	
-def GCjudge(expmat,dataanno,geneexp,outputfile,dataresult,iternum=100,threshold=0.001,repnum=10, changethreshold=1e-19,alpha=0.7):
+def GCjudge(expmat,dataanno,geneexp,outputfile,dataresult,repnum=100,threshold=0.001,iternum=10, changethreshold=1e-19,alpha=0.7):
 	genename = np.array(pd.read_csv(dataanno, delimiter='\t', header=None))
 	genename = genename.flatten().tolist()
 	selectcols = itptfilecon(dataresult)
@@ -160,7 +160,7 @@ def GCjudge(expmat,dataanno,geneexp,outputfile,dataresult,iternum=100,threshold=
 	ppiinit	= ppiinit[0]
 	geneexp = np.mat(pd.read_csv(geneexp, delimiter='\t', header=None))
 	expmat = np.mat(pd.read_csv(expmat, delimiter='\t', header=None))
-	ppiinit = sygyPPI(ppiinit,expmat,geneexp,iternum,changethreshold,alpha)
+	ppiinit = sygyPPI(ppiinit,expmat,geneexp,repnum,changethreshold,alpha)
 	numberselectcols = digitselectcols(selectcols, genename)
 	output = []
 	for smallselect, smallnames in zip(numberselectcols, selectcols):
@@ -169,14 +169,14 @@ def GCjudge(expmat,dataanno,geneexp,outputfile,dataresult,iternum=100,threshold=
 			out = stre.join(smallnames)
 			output.append([out,'NA','NA'])
 		else:
-			oneout = GCjudgeback(ppiinit[:,smallselect],threshold, repnum,smallnames)
+			oneout = GCjudgeback(ppiinit[:,smallselect],threshold, iternum,smallnames)
 			output.append(oneout)
 	output = mat(output)
 	np.savetxt(outputfile,output,fmt='%s',delimiter='\t',newline='\n')
 
 	
 
-def GCjudgeback(matin, threshold = 0.001, repnum = 10, inputnames=[]):
+def GCjudgeback(matin, threshold = 0.001, iternum = 10, inputnames=[]):
 	matin=np.mat(matin)
 	matinrows = matin.shape[1]
 	#
@@ -215,20 +215,20 @@ def GCjudgeback(matin, threshold = 0.001, repnum = 10, inputnames=[]):
 	fi = namelist[0]
 	ai = namelist[1]
 	outputv = funGC(matin,fi,ai,threshold)
-	outputp = funGCpv(matin,fi,ai,repnum,threshold)
+	outputp = funGCpv(matin,fi,ai,iternum,threshold)
 	out = stroutppi(fi,ai,inputnames)
 	out = [out, outputv, outputp]
 	return(out)
 
-def GCana(expmat,dataanno,geneexp,outputfile,dataselect='NULLdata',iternum=100,threshold=0.001,repnum=10,limitinter=5, changethreshold=1e-19,alpha=0.7):
+def GCana(expmat,dataanno,geneexp,outputfile,dataselect='NULLdata',repnum=100,threshold=0.001,iternum=10,limitinter=5, changethreshold=1e-19,alpha=0.7):
 	if dataselect == 'NULLdata':
 		genename = np.array(pd.read_csv(dataanno, delimiter='\t', header=None))
 		ppiinit  = np.eye(genename.shape[0], dtype=int)
 		genename = genename.flatten().tolist()
 		geneexp = np.mat(pd.read_csv(geneexp, delimiter='\t', header=None))
 		expmat = np.mat(pd.read_csv(expmat, delimiter='\t', header=None))
-		ppiinit = sygyPPI(ppiinit,expmat,geneexp,iternum,changethreshold,alpha)
-		GCanaback(ppiinit, outputfile, threshold, repnum, genename,limitinter)
+		ppiinit = sygyPPI(ppiinit,expmat,geneexp,repnum,changethreshold,alpha)
+		GCanaback(ppiinit, outputfile, threshold, iternum, genename,limitinter)
 	else:
 		dataselect = np.array(pd.read_csv(dataselect, delimiter='\t', header=None))[:,0].tolist()
 		ppiinit = getPPIdatain(dataselect,dataanno)
@@ -236,10 +236,10 @@ def GCana(expmat,dataanno,geneexp,outputfile,dataselect='NULLdata',iternum=100,t
 		ppiinit	= ppiinit[0]
 		geneexp = np.mat(pd.read_csv(geneexp, delimiter='\t', header=None))
 		expmat = np.mat(pd.read_csv(expmat, delimiter='\t', header=None))
-		ppiinit = sygyPPI(ppiinit,expmat,geneexp,iternum,changethreshold,alpha)
-		GCanaback(ppiinit, outputfile, threshold, repnum, genename,limitinter)
+		ppiinit = sygyPPI(ppiinit,expmat,geneexp,repnum,changethreshold,alpha)
+		GCanaback(ppiinit, outputfile, threshold, iternum, genename,limitinter)
 
-def GCanaback(matin, outputfile, threshold = 0.001, repnum = 10, inputnames=[],limitinter=5):
+def GCanaback(matin, outputfile, threshold = 0.001, iternum = 10, inputnames=[],limitinter=5):
 	matin=np.mat(matin)
 	matinrows = matin.shape[1]
 	naoutput = (0,1)
@@ -257,7 +257,7 @@ def GCanaback(matin, outputfile, threshold = 0.001, repnum = 10, inputnames=[],l
 		treemat[fi,ai] = thisv
 	inds = np.unravel_index(np.nanargmax(treemat, axis=None), treemat.shape)
 	thev = treemat[inds]
-	thep = funGCpv(matin, namelist[inds[0]], namelist[inds[1]], repnum, threshold)
+	thep = funGCpv(matin, namelist[inds[0]], namelist[inds[1]], iternum, threshold)
 	out = stroutppi(namelist[inds[0]], namelist[inds[1]], inputnames)
 	out = [out, thev, thep]
 	output.append(out)
@@ -284,7 +284,7 @@ def GCanaback(matin, outputfile, threshold = 0.001, repnum = 10, inputnames=[],l
 		inds = np.unravel_index(np.nanargmax(treemat, axis=None), treemat.shape)
 		thev = treemat[inds]
 		out = stroutppi(namelist[inds[0]], namelist[inds[1]], inputnames)
-		thep = funGCpv(matin, namelist[inds[0]], namelist[inds[1]], repnum, threshold)
+		thep = funGCpv(matin, namelist[inds[0]], namelist[inds[1]], iternum, threshold)
 		out = [out, thev, thep]
 		output.append(out)
 		namelist[inds[0]] = namelist[inds[0]]+namelist.pop(inds[1])
