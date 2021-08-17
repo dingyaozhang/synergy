@@ -75,16 +75,16 @@ def sygyPPI(datain,refmat,geneexp,inter=1000,changethreshold=1e-19,alpha=0.7):
 	return(output)
 
 def funGC(X0,fi,ai,threshold):
-	datain01 = X0[:,fi]
-	datain02 = X0[:,ai]
+	datain01 = np.sum(X0[:,fi],1)
+	datain02 = np.sum(X0[:,ai],1)
 	datain = datain01 + datain02
 	output = np.sum(datain >= threshold) - np.sum(datain01 >= threshold) - np.sum(datain02 >= threshold)
 	return(output)
 
 
 def funGCpv(X0,fi,ai,iternum,threshold):
-	datain01 = X0[:,fi]
-	datain02 = X0[:,ai]
+	datain01 = np.sum(X0[:,fi],1)
+	datain02 = np.sum(X0[:,ai],1)
 	datain = datain01 + datain02
 	threshold2 = np.sum(datain >= threshold)
 	output = np.sum(datain >= threshold) - np.sum(datain01 >= threshold) - np.sum(datain02 >= threshold)
