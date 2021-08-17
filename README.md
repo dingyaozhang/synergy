@@ -25,12 +25,12 @@ The matrix file looks like (only the numeric part is in the file.):
 
 The name file looks like (The first row is not in the file.): 
 
-|  Gene name   | Gene id  |
+|  *Gene name*   | *Gene id*  |
 | ----  | ---- |
-|ABCA13 |	ENSP00000411096 |
-|ABCA3	| ENSP00000301732 |
+|*ABCA13* |	ENSP00000411096 |
+|*ABCA3*	| ENSP00000301732 |
 | ...   | ...             |
-|ABCC9  |	ENSP00000261200 |
+|*ABCC9*  |	ENSP00000261200 |
 
 (An example of this file is in.)
 
@@ -75,12 +75,12 @@ The matrix file looks like (only the numeric part is in the file.):
 
 The name file looks like (The first row is not in the file.): 
 
-|  Gene name   | Gene id  |
-| ----  | ---- |
+|  *Gene name*   | *Gene id*  |
+|     ----       | ----       |
 |ABCA13 |	ENSP00000411096 |
-|ABCA3	| ENSP00000301732 |
-| ...   | ...             |
-|ABCC9  |	ENSP00000261200 |
+|ABCA3	 | ENSP00000301732 |
+| ...    | ...             |
+|ABCC9   |	ENSP00000261200 |
 
 (An example of this file is in.)
 
@@ -111,7 +111,7 @@ A tsv (tab-separated values file) file with nrows and ncols， it should be a sy
 
 A name file which is corresponding to each feature in ppi_matrix file.
 The name file looks like (The first row is not in the file.): 
-| Gene id  |
+| *Gene id*  |
 | ---- |
 |	ENSP00000411096 |
 | ENSP00000301732 |
@@ -121,7 +121,7 @@ The name file looks like (The first row is not in the file.):
 
 A geneexp file including gene expression level which is corresponding to each feature in ppi_matrix/name file.
 The geneexp file looks like (The first row is not in the file.): 
-| Gene id  |
+| *Gene id*  |
 | ---- |
 |	1.23 |
 | 4.56 |
