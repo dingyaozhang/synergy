@@ -143,6 +143,9 @@ sygyPPI.GCjudge('ppi_matrix.txt','name.txt','geneexp.txt','output.txt','temp_out
 ```
 ### Options
 ```
+dataselect:
+the genes which are selected to be calculated. If this value is not input, all the genes in the ppi_matrix will be calculated.
+
 iternum:
 The number of iteration used to calculate p-value.
 
