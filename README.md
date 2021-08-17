@@ -27,10 +27,10 @@ The name file looks like (The first row is not in the file.):
 
 |  *Gene name*   | *Gene id*  |
 | ----  | ---- |
-|*ABCA13* |	ENSP00000411096 |
-|*ABCA3*	| ENSP00000301732 |
-| ...   | ...             |
-|*ABCC9*  |	ENSP00000261200 |
+| ABCA13  |	ENSP00000411096 |
+| ABCA3 	| ENSP00000301732 |
+| ...     | ...             |
+| ABCC9   |	ENSP00000261200 |
 
 (An example of this file is in.)
 
